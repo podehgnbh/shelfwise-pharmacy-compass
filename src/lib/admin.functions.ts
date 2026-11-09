@@ -18,28 +18,12 @@ export const hasAdmin = createServerFn({ method: "GET" }).handler(async () => {
   return { exists: (count ?? 0) > 0 };
 });
 
-/** One-time bootstrap: only works while no admin exists. */
+/** Initial administrator is provisioned through trusted management, never a public endpoint. */
 export const setupAdmin = createServerFn({ method: "POST" })
   .inputValidator((i: { username: string; password: string }) => validateCreds(i))
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { count } = await supabaseAdmin
-      .from("user_roles")
-      .select("id", { count: "exact", head: true })
-      .eq("role", "admin");
-    if ((count ?? 0) > 0) throw new Error("يوجد مدير مسبقاً");
-    const { data: u, error } = await supabaseAdmin.auth.admin.createUser({
-      email: usernameToEmail(data.username),
-      password: data.password,
-      email_confirm: true,
-    });
-    if (error || !u.user) throw new Error(error?.message ?? "فشل الإنشاء");
-    await supabaseAdmin.from("profiles").insert({ id: u.user.id, username: data.username, pharmacy_name: "الإدارة" });
-    await supabaseAdmin.from("user_roles").insert({ user_id: u.user.id, role: "admin" });
-    return { ok: true };
-  });
+  .handler(async () => { throw new Error("تم إغلاق إعداد المدير. تواصل مع إدارة ميديسون."); });
 
-async function assertAdmin(supabase: any, userId: string) {
+async function assertAdmin(supabase: import("@supabase/supabase-js").SupabaseClient<import("@/integrations/supabase/types").Database>, userId: string) {
   const { data } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
   if (!data) throw new Error("غير مصرح");
 }
@@ -78,8 +62,12 @@ export const createPharmacy = createServerFn({ method: "POST" })
     if (error || !u.user) {
       throw new Error(error?.message?.includes("already") ? "اسم المستخدم مستخدم مسبقاً" : error?.message ?? "فشل الإنشاء");
     }
-    await supabaseAdmin.from("profiles").insert({ id: u.user.id, username: data.username, pharmacy_name: data.pharmacyName });
-    await supabaseAdmin.from("user_roles").insert({ user_id: u.user.id, role: "pharmacy" });
+    const profile = await supabaseAdmin.from("profiles").insert({ id: u.user.id, username: data.username, pharmacy_name: data.pharmacyName });
+    const role = profile.error ? profile : await supabaseAdmin.from("user_roles").insert({ user_id: u.user.id, role: "pharmacy" });
+    if (profile.error || role.error) {
+      await supabaseAdmin.auth.admin.deleteUser(u.user.id);
+      throw new Error("تعذر إنشاء حساب الصيدلية، حاول مرة أخرى");
+    }
     return { ok: true };
   });
 

@@ -7,7 +7,7 @@ import { MedicineForm } from "@/components/medicine-form";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/app/expiry")({
-  head: () => ({ meta: [{ title: "جرد الصلاحية — Medicine" }] }),
+  head: () => ({ meta: [{ title: "جرد الصلاحية — ميديسون" }, { name: "description", content: "متابعة الأدوية المنتهية والقريبة للانتهاء والكميات" }, { property: "og:title", content: "جرد الصلاحية — ميديسون" }, { property: "og:description", content: "متابعة الأدوية المنتهية والقريبة للانتهاء والكميات" }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: ExpiryPage,
 });
 

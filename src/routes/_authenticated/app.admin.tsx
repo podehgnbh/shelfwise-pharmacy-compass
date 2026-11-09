@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/app/admin")({
-  head: () => ({ meta: [{ title: "الصيدليات — Medicine" }] }),
+  head: () => ({ meta: [{ title: "الصيدليات — ميديسون" }, { name: "description", content: "إدارة حسابات الصيدليات وبيانات الدخول" }, { property: "og:title", content: "الصيدليات — ميديسون" }, { property: "og:description", content: "إدارة حسابات الصيدليات وبيانات الدخول" }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: AdminPage,
 });
 

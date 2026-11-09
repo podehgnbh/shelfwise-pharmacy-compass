@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Application architecture
+- Keep pharmacy data scoped to the authenticated owner with database-enforced same-owner shelf/category references.
+- Provision the first administrator through trusted management; never expose public administrator creation.
+- Use Cloud authentication and role-verified server functions for all administrator account operations.

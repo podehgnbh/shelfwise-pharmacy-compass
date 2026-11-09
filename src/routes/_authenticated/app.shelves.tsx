@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/app/shelves")({
-  head: () => ({ meta: [{ title: "الرفوف والأصناف — Medicine" }] }),
+  head: () => ({ meta: [{ title: "الرفوف والأصناف — ميديسون" }, { name: "description", content: "تنظيم رفوف الصيدلية وتخصيص أصناف الأدوية" }, { property: "og:title", content: "الرفوف والأصناف — ميديسون" }, { property: "og:description", content: "تنظيم رفوف الصيدلية وتخصيص أصناف الأدوية" }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: ShelvesPage,
 });
 
@@ -33,7 +33,7 @@ function ShelvesPage() {
       if (!existing.has(c)) rows.push({ code: c });
     }
     const { error } = await supabase.from("shelves").insert(rows);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     qc.invalidateQueries({ queryKey: ["shelves"] });
     toast.success(`تمت إضافة ${n} رف`);
   }

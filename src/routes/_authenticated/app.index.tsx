@@ -8,7 +8,7 @@ import { ExpiryBadge } from "@/components/expiry-badge";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/app/")({
-  head: () => ({ meta: [{ title: "البحث — Medicine" }] }),
+  head: () => ({ meta: [{ title: "البحث — ميديسون" }, { name: "description", content: "ابحث عن العلاج والمادة العلمية والشركة وموقع الرف" }, { property: "og:title", content: "البحث — ميديسون" }, { property: "og:description", content: "ابحث عن العلاج والمادة العلمية والشركة وموقع الرف" }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: SearchPage,
 });
 
