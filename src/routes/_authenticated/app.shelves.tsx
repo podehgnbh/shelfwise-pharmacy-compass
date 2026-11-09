@@ -33,7 +33,7 @@ function ShelvesPage() {
       if (!existing.has(c)) rows.push({ code: c });
     }
     const { error } = await supabase.from("shelves").insert(rows);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     qc.invalidateQueries({ queryKey: ["shelves"] });
     toast.success(`تمت إضافة ${n} رف`);
   }

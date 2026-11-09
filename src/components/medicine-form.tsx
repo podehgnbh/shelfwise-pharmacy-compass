@@ -44,7 +44,7 @@ export function MedicineForm({ open, onOpenChange, medicine }: Props) {
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
-    if (!f.name.trim() && !f.scientific_name.trim()) return toast.error("اكتب اسم العلاج أو المادة العلمية");
+    if (!f.name.trim() && !f.scientific_name.trim()) { toast.error("اكتب اسم العلاج أو المادة العلمية"); return; }
     setSaving(true);
     const row = {
       name: f.name.trim() || null,
@@ -60,7 +60,7 @@ export function MedicineForm({ open, onOpenChange, medicine }: Props) {
       ? await supabase.from("medicines").update(row).eq("id", medicine.id)
       : await supabase.from("medicines").insert(row);
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(medicine ? "تم التعديل" : "تمت الإضافة");
     qc.invalidateQueries({ queryKey: ["medicines"] });
     onOpenChange(false);

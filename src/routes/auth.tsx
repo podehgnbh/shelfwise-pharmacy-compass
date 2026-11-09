@@ -32,7 +32,7 @@ function AuthPage() {
       password,
     });
     setLoading(false);
-    if (error) return toast.error("اسم المستخدم أو كلمة المرور غير صحيحة");
+    if (error) { toast.error("اسم المستخدم أو كلمة المرور غير صحيحة"); return; }
     navigate({ to: "/app" });
   }
 
