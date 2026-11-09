@@ -1,0 +1,4 @@
+CREATE OR REPLACE FUNCTION public.validate_medicine_references() RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$ BEGIN IF NEW.shelf_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM public.shelves WHERE id = NEW.shelf_id AND owner_id = NEW.owner_id) THEN RAISE EXCEPTION 'Shelf belongs to another pharmacy'; END IF; IF NEW.category_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM public.categories WHERE id = NEW.category_id AND owner_id = NEW.owner_id) THEN RAISE EXCEPTION 'Category belongs to another pharmacy'; END IF; RETURN NEW; END $$;
+CREATE TRIGGER validate_medicine_references BEFORE INSERT OR UPDATE ON public.medicines FOR EACH ROW EXECUTE FUNCTION public.validate_medicine_references();
+REVOKE UPDATE ON public.profiles FROM authenticated;
+GRANT UPDATE (pharmacy_name) ON public.profiles TO authenticated;

@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { usernameToEmail } from "@/lib/medicine";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import mark from "@/assets/medicine-mark.jpg";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -24,6 +25,10 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => { if (data.user) navigate({ to: "/app", replace: true }); });
+  }, [navigate]);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -39,6 +44,7 @@ function AuthPage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-5">
       <div className="w-full max-w-sm">
+        <img src={mark} alt="" width={96} height={96} className="mx-auto mb-3 h-24 w-24" />
         <Link to="/" className="text-display block text-center text-3xl">
           Medicine
         </Link>
@@ -66,12 +72,7 @@ function AuthPage() {
             {loading ? "جارِ الدخول..." : "دخول"}
           </Button>
         </form>
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          أول مرة؟{" "}
-          <Link to="/setup" className="text-primary">
-            إعداد حساب المدير
-          </Link>
-        </p>
+
       </div>
     </main>
   );
