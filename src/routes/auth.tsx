@@ -44,7 +44,7 @@ function AuthPage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-5">
       <div className="w-full max-w-sm">
-        <img src={mark} alt="" width={96} height={96} className="mx-auto mb-3 h-24 w-24" />
+        <img src={mark} alt="" width={96} height={96} className="mx-auto mb-3 h-24 w-24 mix-blend-multiply" />
         <Link to="/" className="text-display block text-center text-3xl">
           Medicine
         </Link>
